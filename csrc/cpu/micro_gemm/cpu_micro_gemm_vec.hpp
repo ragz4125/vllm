@@ -73,8 +73,8 @@ class TileGemm82 {
         scalar_t v = *curr_m_a;
         load_vec_t a_reg_original(v);
         vec_op::FP32Vec16 a_reg(a_reg_original);
-        c_regs[i * 2] = c_regs[i * 2] + a_reg * fp32_b_0_reg;
-        c_regs[i * 2 + 1] = c_regs[i * 2 + 1] + a_reg * fp32_b_1_reg;
+        vec_op::fma(c_regs[i * 2], a_reg, fp32_b_0_reg);
+        vec_op::fma(c_regs[i * 2 + 1], a_reg, fp32_b_1_reg);
 
         // update
         curr_m_a += lda;

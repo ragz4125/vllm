@@ -958,7 +958,14 @@ void storeFP32(float v, T* ptr) {
 }
 
 inline void fma(FP32Vec16& acc, FP32Vec16& a, FP32Vec16& b) {
+#ifdef __AVX512F__
+  acc.reg = _mm512_fmadd_ps(a.reg, b.reg, acc.reg);
+#elif defined(__FMA__)
+  acc.reg_low = _mm256_fmadd_ps(a.reg_low, b.reg_low, acc.reg_low);
+  acc.reg_high = _mm256_fmadd_ps(a.reg_high, b.reg_high, acc.reg_high);
+#else
   acc = acc + a * b;
+#endif
 }
 
 template <>
